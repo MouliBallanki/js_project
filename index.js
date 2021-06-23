@@ -25,7 +25,27 @@ const newCard = ({
     </div>
   </div>`;
 
+const globalStore = [];
 
+const loadInitialTaskCards = () =>{
+  // accessing local storage
+  const getInitialData = localStorage.getItem("tasky");
+
+  // checking wheather it is present or not in the local storage
+
+  if(!getInitialData) return ;
+
+  // cnvert stringified object into object 
+  const { cards} = JSON.parse(getInitialData);
+
+  // map around the array to generate html code and save it global storage 
+
+  cards.map((cardObject) =>{
+    const createNewCard = newCard(cardObject);
+    taskContainer.insertAdjacentHTML("beforeend", createNewCard);
+    globalStore.push(cardObject);
+  })
+}
 
 const saveChanges = () =>{
     const taskData = {
@@ -38,4 +58,11 @@ const saveChanges = () =>{
     const createNewCard = newCard(taskData);
 
     taskContainer.insertAdjacentHTML("beforeend", createNewCard);
+    globalStore.push(taskData) 
+    // console.log(globalStore);
+
+    // application programming interface
+    localStorage.setItem("tasky",JSON.stringify({cards : globalStore})); //adding data to local storage
+
+     
 };
